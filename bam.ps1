@@ -69,8 +69,8 @@ $UserTime = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Time
 $UserBias = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\TimeZoneInformation").ActiveTimeBias
 $UserDay = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\TimeZoneInformation").DaylightBias
 
+Write-Host -ForegroundColor Cyan "Loading BAM History, please wait. Will take a bit."
 $Bam = Foreach ($Sid in $Users){$u++
-        Write-Host -ForegroundColor Cyan "Please wait. Will take a bit."
         foreach($rp in $rpath){
            $BamItems = Get-Item -Path "$($rp)UserSettings\$Sid" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Property
 
