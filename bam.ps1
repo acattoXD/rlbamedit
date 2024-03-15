@@ -47,7 +47,7 @@ if (!(Test-Admin)) {
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 
 Clear-Host
-Write-Host -ForegroundColor Cyan "BAM Script written by account, stripped off of RedLotus.";
+Write-Host -ForegroundColor Cyan "BAM Script written by acatto, stripped off of RedLotus.";
 Write-Host "";
 
 
