@@ -16,7 +16,7 @@ function Get-Signature {
             $Signature = "Valid Signature"
         }
         elseif ($Authenticode -eq "NotSigned") {
-            $Signature = "Invalid Signature (NotSigned)"
+            $Signature = "Invalid Signature (NotSigned, likely a cheat)"
         }
         elseif ($Authenticode -eq "HashMismatch") {
             $Signature = "Invalid Signature (HashMismatch)"
@@ -73,8 +73,7 @@ $Bam = Foreach ($Sid in $Users){$u++
             
         foreach($rp in $rpath){
            $BamItems = Get-Item -Path "$($rp)UserSettings\$Sid" -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Property
-           Write-Host -ForegroundColor Red "Extracting " -NoNewLine
-           Write-Host -ForegroundColor Blue "$($rp)UserSettings\$SID"
+           Write-Host -ForegroundColor Cyan "Please wait. Will take a bit."
 
             Try{
             $objSID = New-Object System.Security.Principal.SecurityIdentifier($Sid)
