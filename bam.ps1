@@ -16,16 +16,16 @@ function Get-Signature {
             $Signature = "Valid Signature"
         }
         elseif ($Authenticode -eq "NotSigned") {
-            $Signature = "Invalid Signature (NotSigned)"
+            $Signature = "Invalid Signature (Not signed, likely a cheat.)"
         }
         elseif ($Authenticode -eq "HashMismatch") {
-            $Signature = "Invalid Signature (HashMismatch)"
+            $Signature = "Invalid Signature (Hash Mismatch)"
         }
         elseif ($Authenticode -eq "NotTrusted") {
-            $Signature = "Invalid Signature (NotTrusted)"
+            $Signature = "Invalid Signature (Not Trusted)"
         }
         elseif ($Authenticode -eq "UnknownError") {
-            $Signature = "Invalid Signature (UnknownError)"
+            $Signature = "Invalid Signature (Unknown Error)"
         }
         return $Signature
     } else {
@@ -48,7 +48,7 @@ if (!(Test-Admin)) {
 }
 
 Clear-Host
-Write-Host -BackgroundColor Red -ForegroundColor Cyan "BAM Script written by account, stripped off of RedLotus."
+Write-Host -BackgroundColor Red -ForegroundColor Cyan "BAM Script written by acatto, stripped off of RedLotus."
 Write-Host ""
 
 $sw = [Diagnostics.Stopwatch]::StartNew()
@@ -68,10 +68,7 @@ Catch {
     Exit
 }
 $rpath = @("HKLM:\SYSTEM\CurrentControlSet\Services\bam\", "HKLM:\SYSTEM\CurrentControlSet\Services\bam\state\")
-
-$UserTime = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\TimeZoneInformation").TimeZoneKeyName
 $UserBias = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\TimeZoneInformation").ActiveTimeBias
-$UserDay = (Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\TimeZoneInformation").DaylightBias
 
 Write-Progress -Activity "Extracting BAM keys" -Status "Please wait..." -PercentComplete 0
 
@@ -97,16 +94,8 @@ $Bam = foreach ($Sid in $Users) {
 
             If ($key.length -eq 24) {
                 $Hex = [System.BitConverter]::ToString($key[7..0]) -replace "-", ""
-                $TimeLocal = Get-Date ([DateTime]::FromFileTime([Convert]::ToInt64($Hex, 16))) -Format "yyyy-MM-dd HH:mm:ss"
                 $Bias = -([convert]::ToInt32([Convert]::ToString($UserBias,2),2))
-                $Day = -([convert]::ToInt32([Convert]::ToString($UserDay,2),2))
-                $Biasd = $Bias/60
-                $Dayd = $Day/60
-                $d = if((((split-path -path $item) | ConvertFrom-String -Delimiter "\\").P3)-match '\d{1}') {
-                    ((split-path -path $item).Remove(23)).trimstart("\Device\HarddiskVolume")
-                } else {
-                    $d = ""
-                }
+                $TImeUser = (Get-Date ([DateTime]::FromFileTimeUtc([Convert]::ToInt64($Hex, 16))).addminutes($Bias) -Format "yyyy-MM-dd HH:mm:ss")
                 $f = if((((split-path -path $item) | ConvertFrom-String -Delimiter "\\").P3)-match '\d{1}') {
                     Split-path -leaf ($item).TrimStart()
                 } else {
