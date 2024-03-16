@@ -128,4 +128,4 @@ $sw.stop()
 $t = [math]::Round($sw.Elapsed.TotalMinutes,2)
 
 Clear-Host
-Write-Host "Elapsed Time $t Minutes" -ForegroundColor DarkRed
+Write-Host "Elapsed Time: $t Minutes" -ForegroundColor Red
